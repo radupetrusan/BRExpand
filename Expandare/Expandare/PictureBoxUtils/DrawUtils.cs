@@ -11,17 +11,40 @@ namespace Expandare.PictureBoxUtils
 {
     class DrawUtils
     {
-        public void DeseneazaLinie(Linie linie, PictureBox pictureBox)
+        private PictureBox _pictureBox;
+        private Graphics _graphics;
+
+        public DrawUtils(PictureBox pictureBox)
         {
-            Graphics g = pictureBox.CreateGraphics();
+            _pictureBox = pictureBox;
+            _graphics = _pictureBox.CreateGraphics();
+        }
+
+        public void DeseneazaLinie(Linie linie)
+        {
             PointF pt1D = new PointF();
             PointF pt2D = new PointF();
-            pt1D.X = linie.A.X;
-            pt1D.Y = linie.A.Y;
-            pt2D.X = linie.B.X;
-            pt2D.Y = linie.B.Y;
+            pt1D.X = linie.Start.X;
+            pt1D.Y = linie.Start.Y;
+            pt2D.X = linie.End.X;
+            pt2D.Y = linie.End.Y;
 
-            g.DrawLine(Pens.Black, pt1D, pt2D);
+            _graphics.DrawLine(Pens.Black, pt1D, pt2D);
+        }
+
+        public void DeseneazaPunct(Point punct, Pen pen)
+        {
+            _graphics.DrawRectangle(pen, new Rectangle(punct, new Size(1, 1)));
+        }
+
+        public void DeseneazaVarf(Point punct, int size)
+        {
+            _graphics.DrawEllipse(Pens.Black, new Rectangle(new Point(punct.X - size, punct.Y - size), new Size(size * 2 + 1, size * 2 + 1)));
+        }
+
+        public void ColoreazaInteriorObiect(Obiect obiect, Pen pen)
+        {
+            obiect.Puncte.ForEach(p => DeseneazaPunct(p, pen));
         }
     }
 }
