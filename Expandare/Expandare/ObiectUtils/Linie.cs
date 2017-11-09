@@ -50,7 +50,7 @@ namespace Expandare.ObiectUtils
                 _end = value;
                 if (Start != null)
                 {
-                    DeterminaEcuatiaLiniei();
+                    //DeterminaEcuatiaLiniei();
                     Puncte = getPoints(1000);
                 }
             }

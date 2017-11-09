@@ -56,11 +56,13 @@ namespace Expandare
                 }
 
                 _inProgres = true;
+                _obiectInProgres.Varfuri.Add(punct);
             }
             else
             {
                 if (!_isNearInitialPoint)
                 {
+                    _obiectInProgres.Varfuri.Add(punct);
                     _linieInProgres.End = punct;
                     _obiectInProgres.LiniiPerimetru.Add(new Linie(_linieInProgres));
 
@@ -78,12 +80,14 @@ namespace Expandare
                     _linieInProgres.End = new Point(_initialPoint.X, _initialPoint.Y);
                     _obiectInProgres.LiniiPerimetru.Add(new Linie(_linieInProgres));
 
-                    _obiectInProgres.CalculeazaPuncteInterioare(new Point(0, 0), new Point(pictureBox1.Width, pictureBox1.Height));
-                    _objects.Add(_obiectInProgres);
+                    //_obiectInProgres.CalculeazaPuncteInterioare(new Point(0, 0), new Point(pictureBox1.Width, pictureBox1.Height));
+                    //_objects.Add(_obiectInProgres);
 
-                    _drawUtils.ColoreazaInteriorObiect(_obiectInProgres, Pens.Black);
                     _drawUtils.DeseneazaLinie(_linieInProgres);
+                    _drawUtils.ColoreazaInteriorObiect(_obiectInProgres, Color.Red, Brushes.Red);
 
+                    _objects.Add(_obiectInProgres);
+                    _obiectInProgres.ObiectInitial = new Obiect(_obiectInProgres);
                     _linieInProgres = null;
                     _obiectInProgres = null;
                     _inProgres = false;
@@ -118,6 +122,38 @@ namespace Expandare
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             numericUpDown1.Enabled = checkBox1.Checked;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                _objects.ForEach(o => _drawUtils.ExpandareUniforma(o, numericUpDown2.Value * 2));
+            }
+            else
+            {
+                _objects.ForEach(o => _drawUtils.ExpandareNeuniforma(o, numericSus.Value, numericDreapta.Value, numericJos.Value, numericStanga.Value));
+            }
+            
+        }
+
+        private void Form1_ResizeEnd(object sender, EventArgs e)
+        {
+            _drawUtils = new DrawUtils(pictureBox1);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            _objects.ForEach(o => o.Uniformizare(_drawUtils));
+            _objects.ForEach(o => _drawUtils.ColoreazaInteriorObiect(o, Color.Yellow, Brushes.Yellow));
+            _objects.ForEach(o => _drawUtils.ColoreazaInteriorObiect(o.ObiectInitial, Color.Red, Brushes.Red));
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDown2.Enabled = checkBox2.Checked;
+
+            numericDreapta.Enabled = numericJos.Enabled = numericStanga.Enabled = numericSus.Enabled = !checkBox2.Checked;
         }
     }
 }
