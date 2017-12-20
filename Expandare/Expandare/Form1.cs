@@ -155,5 +155,15 @@ namespace Expandare
 
             numericDreapta.Enabled = numericJos.Enabled = numericStanga.Enabled = numericSus.Enabled = !checkBox2.Checked;
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

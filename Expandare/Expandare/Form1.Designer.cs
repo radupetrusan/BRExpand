@@ -39,20 +39,21 @@
             this.button4 = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numericSus = new System.Windows.Forms.NumericUpDown();
-            this.numericStanga = new System.Windows.Forms.NumericUpDown();
-            this.numericJos = new System.Windows.Forms.NumericUpDown();
             this.numericDreapta = new System.Windows.Forms.NumericUpDown();
+            this.numericJos = new System.Windows.Forms.NumericUpDown();
+            this.numericStanga = new System.Windows.Forms.NumericUpDown();
+            this.numericSus = new System.Windows.Forms.NumericUpDown();
             this.button5 = new System.Windows.Forms.Button();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
+            this.button6 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSus)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericStanga)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericJos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericDreapta)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStanga)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSus)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -89,6 +90,7 @@
             this.button2.TabIndex = 2;
             this.button2.Text = "Incarca configuratie";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -183,23 +185,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Uniformitate";
             // 
-            // numericSus
+            // numericDreapta
             // 
-            this.numericSus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericSus.Enabled = false;
-            this.numericSus.Location = new System.Drawing.Point(111, 82);
-            this.numericSus.Name = "numericSus";
-            this.numericSus.Size = new System.Drawing.Size(42, 20);
-            this.numericSus.TabIndex = 10;
-            // 
-            // numericStanga
-            // 
-            this.numericStanga.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericStanga.Enabled = false;
-            this.numericStanga.Location = new System.Drawing.Point(65, 107);
-            this.numericStanga.Name = "numericStanga";
-            this.numericStanga.Size = new System.Drawing.Size(42, 20);
-            this.numericStanga.TabIndex = 11;
+            this.numericDreapta.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericDreapta.Enabled = false;
+            this.numericDreapta.Location = new System.Drawing.Point(156, 109);
+            this.numericDreapta.Name = "numericDreapta";
+            this.numericDreapta.Size = new System.Drawing.Size(42, 20);
+            this.numericDreapta.TabIndex = 13;
             // 
             // numericJos
             // 
@@ -210,14 +203,23 @@
             this.numericJos.Size = new System.Drawing.Size(42, 20);
             this.numericJos.TabIndex = 12;
             // 
-            // numericDreapta
+            // numericStanga
             // 
-            this.numericDreapta.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericDreapta.Enabled = false;
-            this.numericDreapta.Location = new System.Drawing.Point(156, 109);
-            this.numericDreapta.Name = "numericDreapta";
-            this.numericDreapta.Size = new System.Drawing.Size(42, 20);
-            this.numericDreapta.TabIndex = 13;
+            this.numericStanga.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericStanga.Enabled = false;
+            this.numericStanga.Location = new System.Drawing.Point(65, 107);
+            this.numericStanga.Name = "numericStanga";
+            this.numericStanga.Size = new System.Drawing.Size(42, 20);
+            this.numericStanga.TabIndex = 11;
+            // 
+            // numericSus
+            // 
+            this.numericSus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericSus.Enabled = false;
+            this.numericSus.Location = new System.Drawing.Point(111, 82);
+            this.numericSus.Name = "numericSus";
+            this.numericSus.Size = new System.Drawing.Size(42, 20);
+            this.numericSus.TabIndex = 10;
             // 
             // button5
             // 
@@ -236,11 +238,23 @@
             this.hScrollBar1.Size = new System.Drawing.Size(8, 8);
             this.hScrollBar1.TabIndex = 12;
             // 
+            // button6
+            // 
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.Location = new System.Drawing.Point(572, 296);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(132, 23);
+            this.button6.TabIndex = 13;
+            this.button6.Text = "Netezeste colturi";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(716, 720);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.groupBox1);
@@ -259,10 +273,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericStanga)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericJos)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericDreapta)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStanga)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSus)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -287,6 +301,7 @@
         private System.Windows.Forms.NumericUpDown numericSus;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.HScrollBar hScrollBar1;
+        private System.Windows.Forms.Button button6;
     }
 }
 
