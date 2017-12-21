@@ -10,14 +10,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace ClipperLib
 {
 
-  using Path = List<Point64>;
-  using Paths = List<List<Point64>>;
+  using Path = List<Point>;
+  using Paths = List<List<Point>>;
 
-  public enum JoinType { Square, Round, Miter };
+  public enum JoinType { Square = 1, Round = 2, Miter = 3};
   public enum EndType { Polygon, OpenJoined, OpenButt, OpenSquare, OpenRound };
 
   public struct PointD
@@ -33,7 +34,7 @@ namespace ClipperLib
     {
       this.X = dp.X; this.Y = dp.Y;
     }
-    public PointD(Point64 ip)
+    public PointD(Point ip)
     {
       this.X = ip.X; this.Y = ip.Y;
     }
@@ -67,7 +68,7 @@ namespace ClipperLib
       path = new Path(lenP);
       path.Add(p[0]);
 
-      Point64 lastIp = p[0];
+      Point lastIp = p[0];
       lowestIdx = 0;
       for (int i = 1; i < lenP; i++)
       {
@@ -96,7 +97,7 @@ namespace ClipperLib
     private int lowestIdx;
     public double ArcTolerance { get; set; }
     public double MiterLimit { get; set; }
-    private Point64 PointZero = new Point64(0, 0);
+    private Point PointZero = new Point(0, 0);
 
     private const double TwoPi = Math.PI * 2;
     private const double DefaultArcFrac = 0.02;
@@ -104,9 +105,9 @@ namespace ClipperLib
 
     //------------------------------------------------------------------------------
 
-    internal static Int64 Round(double value)
+    internal static int Round(double value)
     {
-      return value < 0 ? (Int64)(value - 0.5) : (Int64)(value + 0.5);
+      return value < 0 ? (int)(value - 0.5) : (int)(value + 0.5);
     }
     //------------------------------------------------------------------------------
 
@@ -151,7 +152,7 @@ namespace ClipperLib
     private void GetLowestPolygonIdx()
     {
       lowestIdx = -1;
-      Point64 ip1 = PointZero, ip2;
+      Point ip1 = PointZero, ip2;
       for (int i = 0; i < nodes.Count; i++)
       {
         PathNode node = nodes[i];
@@ -174,7 +175,7 @@ namespace ClipperLib
     }
     //------------------------------------------------------------------------------
 
-    internal static PointD GetUnitNormal(Point64 pt1, Point64 pt2)
+    internal static PointD GetUnitNormal(Point pt1, Point pt2)
     {
       double dx = (pt2.X - pt1.X);
       double dy = (pt2.Y - pt1.Y);
@@ -209,8 +210,8 @@ namespace ClipperLib
           //offsetting with two or more vertices (that would be so close together)
           //occasionally causes tiny self-intersections due to rounding.
           //So we offset with just a single vertex here ...
-          pathOut.Add(new Point64(Round(pathIn[j].X + norms[k].X * delta),
-            Round(pathIn[j].Y + norms[k].Y * delta)));
+          pathOut.Add(new Point((int)(Round(pathIn[j].X + norms[k].X * delta)),
+            (int)(Round(pathIn[j].Y + norms[k].Y * delta))));
           return;
         }
       }
@@ -219,11 +220,11 @@ namespace ClipperLib
 
       if (sinA * delta < 0) //ie a concave offset
       {
-        pathOut.Add(new Point64(Round(pathIn[j].X + norms[k].X * delta),
-          Round(pathIn[j].Y + norms[k].Y * delta)));
+        pathOut.Add(new Point((int)(Round(pathIn[j].X + norms[k].X * delta)),
+          (int)(Round(pathIn[j].Y + norms[k].Y * delta))));
         pathOut.Add(pathIn[j]);
-        pathOut.Add(new Point64(Round(pathIn[j].X + norms[j].X * delta),
-          Round(pathIn[j].Y + norms[j].Y * delta)));
+        pathOut.Add(new Point((int)(Round(pathIn[j].X + norms[j].X * delta)),
+          (int)(Round(pathIn[j].Y + norms[j].Y * delta))));
       }
       else
       {
@@ -257,18 +258,18 @@ namespace ClipperLib
       //normal hence parallel to the direction of the respective edges.
       if (delta > 0)
       {
-        pathOut.Add(new Point64(
+        pathOut.Add(new Point(
           Round(pathIn[j].X + delta * (norms[k].X - norms[k].Y)),
           Round(pathIn[j].Y + delta * (norms[k].Y + norms[k].X))));
-        pathOut.Add(new Point64(
+        pathOut.Add(new Point(
           Round(pathIn[j].X + delta * (norms[j].X + norms[j].Y)),
           Round(pathIn[j].Y + delta * (norms[j].Y - norms[j].X))));
       } else
       {
-        pathOut.Add(new Point64(
+        pathOut.Add(new Point(
           Round(pathIn[j].X + delta * (norms[k].X + norms[k].Y)),
           Round(pathIn[j].Y + delta * (norms[k].Y - norms[k].X))));
-        pathOut.Add(new Point64(
+        pathOut.Add(new Point(
           Round(pathIn[j].X + delta * (norms[j].X - norms[j].Y)),
           Round(pathIn[j].Y + delta * (norms[j].Y + norms[j].X))));
       }
@@ -279,7 +280,7 @@ namespace ClipperLib
     {
       //see offset_triginometry4.svg
       double q = delta / cosAplus1; //0 < cosAplus1 <= 2
-      pathOut.Add(new Point64(Round(pathIn[j].X + (norms[k].X + norms[j].X) * q),
+      pathOut.Add(new Point(Round(pathIn[j].X + (norms[k].X + norms[j].X) * q),
         Round(pathIn[j].Y + (norms[k].Y + norms[j].Y) * q)));
     }
     //------------------------------------------------------------------------------
@@ -293,14 +294,14 @@ namespace ClipperLib
       double X = norms[k].X, Y = norms[k].Y, X2;
       for (int i = 0; i < steps; ++i)
       {
-        pathOut.Add(new Point64(
+        pathOut.Add(new Point(
           Round(pathIn[j].X + X * delta),
           Round(pathIn[j].Y + Y * delta)));
         X2 = X;
         X = X * cos - sin * Y;
         Y = X2 * sin + Y * cos;
       }
-      pathOut.Add(new Point64(
+      pathOut.Add(new Point(
       Round(pathIn[j].X + norms[j].X * delta),
       Round(pathIn[j].Y + norms[j].Y * delta)));
     }
@@ -355,7 +356,7 @@ namespace ClipperLib
             double X = 1.0, Y = 0.0;
             for (int j = 1; j <= steps; j++)
             {
-              pathOut.Add(new Point64(
+              pathOut.Add(new Point(
                 Round(pathIn[0].X + X * delta),
                 Round(pathIn[0].Y + Y * delta)));
               double X2 = X;
@@ -368,7 +369,7 @@ namespace ClipperLib
             double X = -1.0, Y = -1.0;
             for (int j = 0; j < 4; ++j)
             {
-              pathOut.Add(new Point64(
+              pathOut.Add(new Point(
                 Round(pathIn[0].X + X * delta),
                 Round(pathIn[0].Y + Y * delta)));
               if (X < 0) X = 1;
@@ -420,15 +421,15 @@ namespace ClipperLib
           for (int j = 1; j < pathInCnt - 1; j++)
             OffsetPoint(j, ref k, node.joinType);
 
-          Point64 pt1;
+          Point pt1;
           if (node.endType == EndType.OpenButt)
           {
             int j = pathInCnt - 1;
-            pt1 = new Point64((Int64)Round(pathIn[j].X + norms[j].X *
-              delta), (Int64)Round(pathIn[j].Y + norms[j].Y * delta));
+            pt1 = new Point((int)Round(pathIn[j].X + norms[j].X *
+              delta), (int)Round(pathIn[j].Y + norms[j].Y * delta));
             pathOut.Add(pt1);
-            pt1 = new Point64((Int64)Round(pathIn[j].X - norms[j].X *
-              delta), (Int64)Round(pathIn[j].Y - norms[j].Y * delta));
+            pt1 = new Point((int)Round(pathIn[j].X - norms[j].X *
+              delta), (int)Round(pathIn[j].Y - norms[j].Y * delta));
             pathOut.Add(pt1);
           }
           else
@@ -453,11 +454,11 @@ namespace ClipperLib
 
           if (node.endType == EndType.OpenButt)
           {
-            pt1 = new Point64((Int64)Round(pathIn[0].X - norms[0].X * delta),
-              (Int64)Round(pathIn[0].Y - norms[0].Y * delta));
+            pt1 = new Point(Round(pathIn[0].X - norms[0].X * delta),
+              Round(pathIn[0].Y - norms[0].Y * delta));
             pathOut.Add(pt1);
-            pt1 = new Point64((Int64)Round(pathIn[0].X + norms[0].X * delta),
-              (Int64)Round(pathIn[0].Y + norms[0].Y * delta));
+            pt1 = new Point(Round(pathIn[0].X + norms[0].X * delta),
+              Round(pathIn[0].Y + norms[0].Y * delta));
             pathOut.Add(pt1);
           }
           else

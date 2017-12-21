@@ -11,11 +11,12 @@
 using System;
 using System.Collections.Generic;
 using ClipperLib;
+using System.Drawing;
 
 namespace ClipperLib
 {
-  using Path = List<Point64>;
-  using Paths = List<List<Point64>>;
+  using Path = List<Point>;
+  using Paths = List<List<Point>>;
 
 
   public class OutPtTri : OutPt
@@ -41,7 +42,7 @@ namespace ClipperLib
     //------------------------------------------------------------------------------
     //------------------------------------------------------------------------------
 
-    private Int64 CrossProductVal(Point64 pt1, Point64 pt2, Point64 pt3, out Int64 val)
+    private Int64 CrossProductVal(Point pt1, Point pt2, Point pt3, out Int64 val)
     {
       val = ((pt2.X - pt1.X) * (pt1.Y - pt3.Y) - (pt1.X - pt3.X) * (pt2.Y - pt1.Y));
       return val;
@@ -120,7 +121,7 @@ namespace ClipperLib
     }
     //------------------------------------------------------------------------------
 
-    private OutPtTri InsertPt(Point64 pt, OutPt afterOutPt)
+    private OutPtTri InsertPt(Point pt, OutPt afterOutPt)
     {
       OutPtTri result =(OutPtTri)CreateOutPt();
       result.Pt = pt;
@@ -134,7 +135,7 @@ namespace ClipperLib
     }
     //------------------------------------------------------------------------------
 
-    private void AddPolygon(Point64 pt1, Point64 pt2, Point64 pt3)
+    private void AddPolygon(Point pt1, Point pt2, Point pt3)
     {
       Path p = new Path();
       p.Capacity = 3;
@@ -197,7 +198,7 @@ namespace ClipperLib
     }
     //------------------------------------------------------------------------------
 
-    protected override void AddLocalMinPoly(Active e1, Active e2, Point64 pt)
+    protected override void AddLocalMinPoly(Active e1, Active e2, Point pt)
     {
       base.AddLocalMinPoly(e1, e2, pt);
 
@@ -261,7 +262,7 @@ namespace ClipperLib
     }
     //------------------------------------------------------------------------------
 
-    protected override void AddLocalMaxPoly(Active e1, Active e2, Point64 Pt)
+    protected override void AddLocalMaxPoly(Active e1, Active e2, Point Pt)
     {
       OutRec outrec = e1.OutRec;
       //very occasionally IsStartSide(e1) is wrong so ...
@@ -312,7 +313,7 @@ namespace ClipperLib
     }
     //------------------------------------------------------------------------------
 
-    protected override OutPt AddOutPt(Active e, Point64 pt)
+    protected override OutPt AddOutPt(Active e, Point pt)
     {
       OutPt result = base.AddOutPt(e, pt);
       OutPtTri opt = (OutPtTri)result;

@@ -64,6 +64,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clipper\Clipper.cs" />
+    <Compile Include="Clipper\ClipperOffset.cs" />
+    <Compile Include="Clipper\ClipperTriangulation.cs" />
     <Compile Include="ConvexHull.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -12,6 +13,7 @@ namespace Expandare.ObiectUtils
     {
         public Obiect()
         {
+            Id = Guid.NewGuid();
             LiniiPerimetru = new List<Linie>();
             Puncte = new List<Point>();
             Varfuri = new List<Point>();
@@ -23,6 +25,7 @@ namespace Expandare.ObiectUtils
 
         public Obiect(Obiect obiect)
         {
+            Id = obiect.Id;
             LiniiPerimetru = obiect.LiniiPerimetru;
             Puncte = obiect.Puncte;
             Varfuri = new List<Point>();
@@ -32,6 +35,8 @@ namespace Expandare.ObiectUtils
         }
 
         private ObiectCalculator _obiectCalculator;
+
+        public Guid Id { get; set; }
 
         public Obiect ObiectInitial { get; set; }
 
@@ -48,63 +53,15 @@ namespace Expandare.ObiectUtils
             Puncte = _obiectCalculator.CalculeazaPuncteInterioare(this, min, max);
         }
 
-        internal void Uniformizare(DrawUtils drawUtils)
+        internal void Uniformizare()
         {
-            //if (Varfuri.Count > 3)
-            //{
-            //    for (var i = 0; i < Varfuri.Count; i++)
-            //    {
-            //        var puncte = GetPoints(i);
-            //        var myPath = new GraphicsPath(FillMode.Winding);
-
-            //        myPath.AddPolygon(puncte);
-            //        drawUtils.ColoreazaPath(myPath);
-            //    }
-            //}
-
-
-
-
-
-            //var i = 0;
-
-            //while (i < Varfuri.Count)
-            //{
-            //    var firstPoint = Varfuri[i];
-            //    var secondPoint = Varfuri[(i + 1) % Varfuri.Count];
-            //    var thirdPoint = Varfuri[(i + 2) % Varfuri.Count];
-
-            //    var line = new Line();
-
-            //    i++;
-            //}
-
             Varfuri = ConvexHull.GetConvexHull(Varfuri);
+        }
 
-
-
-            //var i = 0;
-
-            //while (i < LiniiPerimetru.Count)
-            //{
-            //    var firstLine = LiniiPerimetru[i];
-            //    var secondLine = LiniiPerimetru[(i + 1) % LiniiPerimetru.Count];
-
-            //    foreach (var line in LiniiPerimetru)
-            //    {
-            //        if (line != firstLine && line != secondLine)
-            //        {
-            //            var point = new Point(0, 0);
-            //            if (firstLine.IntersecteazaLinie(line, out point))
-            //            {
-            //                Varfuri.Remove(firstLine.End);
-            //            }
-            //        }
-            //    }
-
-            //    i++;
-            //}
-
+        internal void UndoUniformizare()
+        {
+            Varfuri = new List<Point>();
+            ObiectInitial.Varfuri.ForEach(p => Varfuri.Add(p));
         }
 
         private Point[] GetPoints(int i)
@@ -117,6 +74,60 @@ namespace Expandare.ObiectUtils
             var j = 0;
             list.ForEach(p => points[j++] = p);
             return points;
+        }
+
+        public bool ContinePunct(Point p)
+        {
+            var poly = new Point[ObiectInitial.Varfuri.Count];
+            var index = 0;
+            ObiectInitial.Varfuri.ForEach(punct => poly[index++] = punct);
+
+            Point p1, p2;
+
+            bool inside = false;
+
+            if (poly.Length < 3)
+            {
+                return inside;
+            }
+
+            var oldPoint = new Point(
+                poly[poly.Length - 1].X, poly[poly.Length - 1].Y);
+
+
+            for (int i = 0; i < poly.Length; i++)
+            {
+                var newPoint = new Point(poly[i].X, poly[i].Y);
+
+
+                if (newPoint.X > oldPoint.X)
+                {
+                    p1 = oldPoint;
+
+                    p2 = newPoint;
+                }
+
+                else
+                {
+                    p1 = newPoint;
+
+                    p2 = oldPoint;
+                }
+
+
+                if ((newPoint.X < p.X) == (p.X <= oldPoint.X)
+                    && (p.Y - (long)p1.Y) * (p2.X - p1.X)
+                    < (p2.Y - (long)p1.Y) * (p.X - p1.X))
+                {
+                    inside = !inside;
+                }
+
+
+                oldPoint = newPoint;
+            }
+
+
+            return inside;
         }
     }
 }
