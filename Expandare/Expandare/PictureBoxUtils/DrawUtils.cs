@@ -129,6 +129,8 @@ namespace Expandare.PictureBoxUtils
 
         public void ExpandareNeuniforma(Obiect obiect, decimal sizeSus, decimal sizeDreapta, decimal sizeStanga, decimal sizeJos, int colturi, bool corectareConcavitate)
         {
+            var size = ((int)sizeDreapta + (int)sizeStanga) / 2;
+
             if (corectareConcavitate)
             {
                 obiect.Uniformizare();
@@ -138,35 +140,68 @@ namespace Expandare.PictureBoxUtils
                 obiect.UndoUniformizare();
             }
 
+            var joinType = JoinType.Miter;
+
+            switch (colturi)
+            {
+                case 1:
+                    joinType = JoinType.Miter;
+                    break;
+
+                case 2:
+                    joinType = JoinType.Round;
+                    break;
+
+                case 3:
+                    joinType = JoinType.Square;
+                    break;
+            }
+
+            var myObject = ClipperOffset.OffsetPaths(new List<List<Point>>() { obiect.Varfuri }, (double)size, joinType, EndType.Polygon).First();
+
             var xMove = (sizeDreapta + sizeStanga) / 2 - sizeDreapta;
             var yMove = (sizeSus + sizeJos) / 2 - sizeSus;
 
-            var expandPath = new GraphicsPath(FillMode.Winding);
-            var yellowPath = new GraphicsPath(FillMode.Winding);
+            var expandedPath = new GraphicsPath(FillMode.Winding);
+            var actualPath = new GraphicsPath(FillMode.Winding);
             var originalPath = new GraphicsPath(FillMode.Winding);
 
-            Point[] expandPoints = new Point[obiect.Varfuri.Count];
-            Point[] yellowPoints = new Point[obiect.Varfuri.Count];
+            Point[] expandedPoints = new Point[myObject.Count];
+            Point[] actualPoints = new Point[obiect.Varfuri.Count];
             Point[] originalPoints = new Point[obiect.ObiectInitial.Varfuri.Count];
 
-            var i = 0;
-            var ii = 0;
-
+            var actualCount = 0;
             obiect.Varfuri.ForEach(p => 
             {
-                expandPoints[i] = new Point(p.X - (int)xMove, p.Y + (int)yMove);
-                yellowPoints[i++] = p;
+                actualPoints[actualCount++] = p;
             });
-            obiect.ObiectInitial.Varfuri.ForEach(p => originalPoints[ii++] = p);
+            actualPath.AddPolygon(actualPoints);
 
-            expandPath.AddPolygon(expandPoints);
-            yellowPath.AddPolygon(yellowPoints);
+            var originalCount = 0;
+            obiect.ObiectInitial.Varfuri.ForEach(p => originalPoints[originalCount++] = p);
             originalPath.AddPolygon(originalPoints);
 
-            var myPen = new Pen(Color.Green, ((int)sizeDreapta + (int)sizeStanga));
+            var expandedCount = 0;
 
-            _graphics.DrawPath(myPen, expandPath);
-            _graphics.FillPath(Brushes.Yellow, yellowPath);
+            //var myPen = new Pen(Color.Green, size);
+
+            if (joinType == JoinType.Miter)
+            {
+                obiect.Varfuri.ForEach(p => expandedPoints[expandedCount++] = new Point(p.X - (int)xMove, p.Y + (int)yMove));
+
+                var myPen = new Pen(Color.Green, (int)size * 2);
+                _graphics.DrawPolygon(myPen, expandedPoints);
+            }
+            else
+            {
+                myObject.ForEach(p => expandedPoints[expandedCount++] = new Point(p.X - (int)xMove, p.Y + (int)yMove));
+                expandedPath.AddPolygon(expandedPoints);
+
+                _graphics.FillPath(Brushes.Green, expandedPath);
+            }
+
+            //_graphics.DrawPath(myPen, expandedPath);
+            _graphics.FillPath(Brushes.Yellow, actualPath);
             _graphics.FillPath(Brushes.Red, originalPath);
         }
 
